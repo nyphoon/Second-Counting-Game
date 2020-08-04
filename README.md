@@ -1,2 +1,6 @@
 # Second-Counting-Game
-An iOS game app. An exercise of programing.
+
+### Start the stopwatch and stop it as close as the target time.
+![](screenshot/timer_running.png)
+
+![](screenshot/result_alert.png)
