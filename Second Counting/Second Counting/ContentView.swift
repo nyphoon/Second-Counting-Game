@@ -18,6 +18,32 @@ struct ContentView: View {
     @State var score = 0
     @State var currentScore = 0
     
+    struct LabelModifier: ViewModifier{
+        func body(content: Content) -> some View{
+            return content
+                .foregroundColor(Color.white)
+                .font(Font.custom("TamilSangamMN-Bold", size: 24))
+        }
+    }
+    struct TimerModifier: ViewModifier{
+        func body(content: Content) -> some View{
+            return content
+                .foregroundColor(Color.yellow)
+                .font(Font.custom("TamilSangamMN-Bold", size: 42))
+        }
+    }
+    struct TrigerModifier: ViewModifier{
+        func body(content: Content) -> some View{
+            return content
+                .font(Font.custom("TamilSangamMN-Bold", size: 32))
+                .padding()
+                .foregroundColor(Color.white)
+                .background(Color(red: 170.0/255.0, green: 70.0/355.0, blue: 60.0/255.0))
+                .cornerRadius(80)
+                .padding(10)
+        }
+    }
+
     func newRound(){
         timeCount = 0.0
         target = Int.random(in: 1...5)
@@ -74,9 +100,9 @@ struct ContentView: View {
         VStack {
             HStack {
                 Spacer()
-                Text("Round: \(round)")
+                Text("Round: \(round)").modifier(LabelModifier())
                 Spacer()
-                Text("Score: \(score)")
+                Text("Score: \(score)").modifier(LabelModifier())
                 Spacer()
                 Button(action: {
                     self.newRound()
@@ -84,13 +110,16 @@ struct ContentView: View {
                     self.score = 0
                 }){
                     Text("Start Over")
+                        .modifier(LabelModifier())
+                        .background(Color.green)
+                        .cornerRadius(10)
                 }
                 Spacer()
-            }
+            }.padding(10)
             Spacer()
-            Text("Please count \(target) second(s)")
+            Text("Please count \(target) second(s)").modifier(LabelModifier())
             Spacer()
-            Text("\(timeCountString())").onReceive(timer) {
+            Text("\(timeCountString())").modifier(TimerModifier()).onReceive(timer) {
                 _ in if self.isTimerRunning == true{
                     self.timeCount += 0.1
                 }
@@ -106,10 +135,8 @@ struct ContentView: View {
                     self.isShowingResult = false
                 }
             }){
-                Text(self.getActionPrompt())
+                Text(self.getActionPrompt()).modifier(TrigerModifier())
             }
-            .padding(.bottom, 100)
-
             .alert(isPresented: $isShowingResult){
                 () -> Alert in
                 return Alert(title: Text(getAlertTitle()),
@@ -119,6 +146,8 @@ struct ContentView: View {
                              })
             }
         }
+        .padding(.bottom, 100)
+        .background(Color(red: 35.0/255.0, green: 50.0/255.0, blue: 70.0/255.0))
     }
 }
 
