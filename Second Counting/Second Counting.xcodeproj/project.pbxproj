@@ -15,6 +15,7 @@
 		AD0DC17624D9432D00D9A561 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD0DC17424D9432D00D9A561 /* LaunchScreen.storyboard */; };
 		AD0DC18124D9432D00D9A561 /* Second_CountingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0DC18024D9432D00D9A561 /* Second_CountingTests.swift */; };
 		AD0DC18C24D9432D00D9A561 /* Second_CountingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0DC18B24D9432D00D9A561 /* Second_CountingUITests.swift */; };
+		AD33149124E27FAA0003FB09 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33149024E27FAA0003FB09 /* Game.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		AD0DC18724D9432D00D9A561 /* Second CountingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Second CountingUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD0DC18B24D9432D00D9A561 /* Second_CountingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Second_CountingUITests.swift; sourceTree = "<group>"; };
 		AD0DC18D24D9432D00D9A561 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AD33149024E27FAA0003FB09 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				AD0DC17424D9432D00D9A561 /* LaunchScreen.storyboard */,
 				AD0DC17724D9432D00D9A561 /* Info.plist */,
 				AD0DC17124D9432D00D9A561 /* Preview Content */,
+				AD33149024E27FAA0003FB09 /* Game.swift */,
 			);
 			path = "Second Counting";
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 				AD0DC16A24D9432800D9A561 /* AppDelegate.swift in Sources */,
 				AD0DC16C24D9432800D9A561 /* SceneDelegate.swift in Sources */,
 				AD0DC16E24D9432800D9A561 /* ContentView.swift in Sources */,
+				AD33149124E27FAA0003FB09 /* Game.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

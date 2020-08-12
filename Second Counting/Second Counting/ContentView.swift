@@ -8,16 +8,18 @@
 
 import SwiftUI
 
+var watch = StopWatch()
+var host = GameHost()
+
 struct ContentView: View {
+    @State var score = host.score
+    @State var round = host.round
+    @State var target = host.target // centisecond
+    @State var timeCount = watch.fromStart() // centisecond
     @State var isShowingResult = false
-    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-    @State var timeCount = 0.0
     @State var isTimerRunning = false
-    @State var target = Int.random(in: 1...5)
-    @State var round = 0
-    @State var score = 0
-    @State var currentScore = 0
-    
+    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+
     struct LabelModifier: ViewModifier{
         func body(content: Content) -> some View{
             return content
@@ -44,56 +46,11 @@ struct ContentView: View {
         }
     }
 
-    func newRound(){
-        timeCount = 0.0
-        target = Int.random(in: 1...5)
-        round += 1
-        score += currentScore
-        currentScore = 0
-    }
-    func getActionPrompt() -> String{
-        let prompt: String
-        if isTimerRunning == true{
-            prompt = "Stop"
-        }else{
-            prompt = "Start"
-        }
-        return prompt
-    }
-    func timeCountString() -> String {
-        String(format: "%.1f", timeCount)
-    }
-    func evaluateScore() -> Int {
-        let diff = abs(timeCount - Double(target))
-        let score: Int
-        if diff == 0.0 {
-            score = 5
-        }else if diff <= 1.0 {
-            score = 2
-        }else if diff <= 2.0 {
-            score = 1
-        }else{
-            score = 0
-        }
-        print("diff \(diff) score \(score)")
-        return score
-    }
-    func getAlertTitle() -> String {
-        let title: String
-        if currentScore == 1{
-            title = "Not bad"
-        }else if currentScore == 2{
-            title = "Almost"
-        }else if currentScore == 5{
-            title = "Awesome! Just hit it"
-        }else{
-            title = "Too far from target"
-        }
-        return title
-    }
-    func getAlertMessage() -> String {
-        let resultTime = timeCountString()
-        return "You stopped at \(resultTime) and got \(currentScore) point(s)"
+    func updateGame(){
+        round = host.round
+        score = host.score
+        target = host.target
+        timeCount = watch.fromStart()
     }
     
     var body: some View {
@@ -105,9 +62,8 @@ struct ContentView: View {
                 Text("Score: \(score)").modifier(LabelModifier())
                 Spacer()
                 Button(action: {
-                    self.newRound()
-                    self.round = 0
-                    self.score = 0
+                    host.startOver()
+                    self.updateGame()
                 }){
                     Text("Start Over")
                         .modifier(LabelModifier())
@@ -117,37 +73,46 @@ struct ContentView: View {
                 Spacer()
             }.padding(10)
             Spacer()
-            Text("Please count \(target) second(s)").modifier(LabelModifier())
+            Text("Please count \(secondDisplay(target)) second(s)").modifier(LabelModifier())
             Spacer()
-            Text("\(timeCountString())").modifier(TimerModifier()).onReceive(timer) {
+            Text("\(centisecondDisplay(timeCount))").modifier(TimerModifier()).onReceive(timer) {
                 _ in if self.isTimerRunning == true{
-                    self.timeCount += 0.1
+                    self.timeCount = watch.fromStart()
                 }
             }
             Spacer()
             Button(action: {
+                self.timeCount = watch.fromStart()
                 if self.isTimerRunning == true{
                     self.isTimerRunning = false
-                    self.currentScore = self.evaluateScore()
                     self.isShowingResult = true
+                    watch.stop()
                 }else{
                     self.isTimerRunning = true
                     self.isShowingResult = false
+                    watch.start()
                 }
             }){
-                Text(self.getActionPrompt()).modifier(TrigerModifier())
+                if isTimerRunning == true{
+                    Text("Stop").modifier(TrigerModifier())
+                }else{
+                    Text("Start").modifier(TrigerModifier())
+                }
             }
             .alert(isPresented: $isShowingResult){
                 () -> Alert in
-                return Alert(title: Text(getAlertTitle()),
-                             message: Text(getAlertMessage()),
-                             dismissButton: .default(Text("ok")) {
-                                self.newRound()
-                             })
+                host.evaluate(watch.toStop())
+                return Alert(title: Text(host.result.title),
+                             message: Text(host.result.message),
+                                     dismissButton: .default(Text("Next Round")) {
+                                        host.nextRound()
+                                        watch.reset()
+                                        self.updateGame()
+                                     })
+                }
             }
-        }
-        .padding(.bottom, 100)
-        .background(Color(red: 35.0/255.0, green: 50.0/255.0, blue: 70.0/255.0))
+            .padding(.bottom, 100)
+            .background(Color(red: 35.0/255.0, green: 50.0/255.0, blue: 70.0/255.0))
     }
 }
 
